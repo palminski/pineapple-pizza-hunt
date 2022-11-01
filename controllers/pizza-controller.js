@@ -15,7 +15,7 @@ const pizzaController = {
 
     //get pizza by id
     getPizzaById({params},res) {
-        Pizza.findOne({_id: params._id})
+        Pizza.findOne({_id: params.id})
         .then(dbPizzaData => {
             if (!dbPizzaData) {
                 res.status(404).json({message: 'No Pizza Found'});
@@ -28,8 +28,39 @@ const pizzaController = {
             res.status(400).json(err);
         });
     },
+
+    //create pizza
+    createPizza({body},res) {
+        Pizza.create(body)
+        .then(dbPizzaData => res.json(dbPizzaData))
+        .catch(err => res.status(400).json(err));
+    },
+
+    //update pizza by ID  
+    updatePizza({params, body}, res) {
+        Pizza.findOneAndUpdate({_id: params.id},body,{new:true})
+        .then(dbPizzaData => {
+            if (!dbPizzaData) {
+                res.status(404).json({message: 'No Pizza Found'});
+                return;
+            }
+            res.json(dbPizzaData);
+        })
+        .catch(err => res.status(400).json(err));
+    },
+
+    //delete pizza
+    deletePizza({params},res) {
+        Pizza.findOneAndDelete({_id: params.id})
+        .then(dbPizzaData => {
+            if (!dbPizzaData) {
+                res.status(404).json({message: 'No Pizza Found'});
+                return;
+            }
+            res.json(dbPizzaData);
+        })
+        .catch(err => res.status(400).json(err));
+    }
 };
-//              l
-//LEFT OFF HERE V
-//This style of writing object methods is another new feature of JavaScript. We can now write them in one of two ways, as shown in the following example:
+
 module.exports = pizzaController;
